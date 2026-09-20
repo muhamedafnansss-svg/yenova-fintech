@@ -1,0 +1,287 @@
+{
+  "total": 31,
+  "passed": 31,
+  "failed": 0,
+  "avg_latency": 20.706451612903226,
+  "results": [
+    {
+      "endpoint": "/",
+      "method": "GET",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 27.27,
+      "notes": ""
+    },
+    {
+      "endpoint": "/api/auth/login",
+      "method": "POST",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 211.79,
+      "notes": "Valid credentials"
+    },
+    {
+      "endpoint": "/api/auth/login (Invalid)",
+      "method": "POST",
+      "status_code": 401,
+      "expected_status": 401,
+      "passed": true,
+      "latency_ms": 200.49,
+      "notes": "Unauthorized rejection check"
+    },
+    {
+      "endpoint": "/api/auth/me",
+      "method": "GET",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 12.51,
+      "notes": "User: Admin User"
+    },
+    {
+      "endpoint": "/api/users",
+      "method": "GET",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 5.9,
+      "notes": "Total Users: 3"
+    },
+    {
+      "endpoint": "/api/profile/",
+      "method": "GET",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 5.03,
+      "notes": ""
+    },
+    {
+      "endpoint": "/api/dashboard/summary",
+      "method": "GET",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 5.76,
+      "notes": "Balance: 539350.0"
+    },
+    {
+      "endpoint": "/api/dashboard/recent-transactions",
+      "method": "GET",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 8.96,
+      "notes": ""
+    },
+    {
+      "endpoint": "/api/ledger",
+      "method": "GET",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 6.76,
+      "notes": ""
+    },
+    {
+      "endpoint": "/api/categories",
+      "method": "POST",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 13.67,
+      "notes": "Created ID: e12ddbe7-5789-491a-902b-86850d9fad40"
+    },
+    {
+      "endpoint": "/api/categories",
+      "method": "GET",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 3.92,
+      "notes": ""
+    },
+    {
+      "endpoint": "/api/projects",
+      "method": "POST",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 12.07,
+      "notes": "Code: PRJ-37"
+    },
+    {
+      "endpoint": "/api/projects/579d86a4-d808-4053-9e2b-89ee5ab1e110/summary",
+      "method": "GET",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 5.64,
+      "notes": ""
+    },
+    {
+      "endpoint": "/api/income",
+      "method": "POST",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 11.67,
+      "notes": ""
+    },
+    {
+      "endpoint": "/api/expenses",
+      "method": "POST",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 11.71,
+      "notes": ""
+    },
+    {
+      "endpoint": "/api/expense-requests",
+      "method": "POST",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 13.28,
+      "notes": "Created ID: 58617875-95fd-4f8b-b692-7a405963b36a"
+    },
+    {
+      "endpoint": "/api/approvals/pending",
+      "method": "GET",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 6.09,
+      "notes": "Pending: 1"
+    },
+    {
+      "endpoint": "/api/approvals/.../approve",
+      "method": "POST",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 12.24,
+      "notes": ""
+    },
+    {
+      "endpoint": "/api/analytics/dashboard",
+      "method": "GET",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 10.66,
+      "notes": ""
+    },
+    {
+      "endpoint": "/api/analytics/categories",
+      "method": "GET",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 4.57,
+      "notes": ""
+    },
+    {
+      "endpoint": "/api/analytics/events",
+      "method": "GET",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 6.83,
+      "notes": ""
+    },
+    {
+      "endpoint": "/api/analytics/cashflow",
+      "method": "GET",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 4.16,
+      "notes": ""
+    },
+    {
+      "endpoint": "/api/reports/daily",
+      "method": "GET",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 4.24,
+      "notes": ""
+    },
+    {
+      "endpoint": "/api/reports/weekly",
+      "method": "GET",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 4.28,
+      "notes": ""
+    },
+    {
+      "endpoint": "/api/reports/monthly",
+      "method": "GET",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 3.37,
+      "notes": ""
+    },
+    {
+      "endpoint": "/api/reports/yearly",
+      "method": "GET",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 3.78,
+      "notes": ""
+    },
+    {
+      "endpoint": "/api/repository/stats",
+      "method": "GET",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 5.08,
+      "notes": ""
+    },
+    {
+      "endpoint": "/api/documents",
+      "method": "GET",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 3.25,
+      "notes": ""
+    },
+    {
+      "endpoint": "/api/audit",
+      "method": "GET",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 9.57,
+      "notes": "Logs: 9"
+    },
+    {
+      "endpoint": "/api/mobile/dashboard",
+      "method": "GET",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 5.96,
+      "notes": ""
+    },
+    {
+      "endpoint": "/api/auth/logout",
+      "method": "POST",
+      "status_code": 200,
+      "expected_status": 200,
+      "passed": true,
+      "latency_ms": 1.39,
+      "notes": ""
+    }
+  ]
+}
