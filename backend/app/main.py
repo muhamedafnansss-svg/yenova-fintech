@@ -104,5 +104,7 @@ async def validation_exception_handler(request, exc):
     return JSONResponse(status_code=500, content={"detail": exc.errors()})
 
 @app.get("/")
+@app.get("/healthz")
+@app.get("/api/health")
 def read_root():
     return {"message": "Welcome to FinTech API", "status": "online"}
