@@ -28,7 +28,7 @@ def serialize_user(user: User, role: Role = None) -> dict:
         "last_login": user.last_login,
         "role": role.name if role else ("Admin" if user.role_id == 1 else "Member"),
         "permissions": role.permissions if role else [],
-        "is_primary_admin": user.id == 2 or user.email.lower() == "admin@yenova.com"
+        "is_primary_admin": user.email.lower() == "admin@yenova.com"
     }
 
 @router.get("", response_model=List[UserResponse], dependencies=[admin_only])
@@ -74,7 +74,7 @@ def update_user(user_id: int, user_update: UserUpdate, db: Session = Depends(get
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
         
-    is_super_admin = user.id == 2 or user.email.lower() == "admin@yenova.com"
+    is_super_admin = user.email.lower() == "admin@yenova.com"
     # Protect primary Super Admin
     if is_super_admin:
         if user_update.status and user_update.status != "Active":
@@ -114,7 +114,7 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    if user.id == 2 or user.email.lower() == "admin@yenova.com":
+    if user.email.lower() == "admin@yenova.com":
         raise HTTPException(status_code=400, detail="The primary Super Admin account cannot be deleted.")
     db.delete(user)
     db.commit()

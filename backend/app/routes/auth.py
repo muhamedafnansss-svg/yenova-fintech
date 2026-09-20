@@ -56,7 +56,7 @@ def get_me(current_user: User = Depends(get_current_user), db: Session = Depends
         "last_login": current_user.last_login,
         "role": role.name if role else "Member",
         "permissions": role.permissions if role else [],
-        "is_primary_admin": current_user.id == 2 or current_user.email.lower() == "admin@yenova.com"
+        "is_primary_admin": current_user.email.lower() == "admin@yenova.com"
     }
     return user_dict
 
