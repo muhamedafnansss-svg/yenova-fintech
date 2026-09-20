@@ -52,17 +52,20 @@ def set_opening_balance(
         existing.created_by = current_user.id
         existing.created_at = datetime.utcnow()
         
-        AuditService.log_action(
-            db=db,
-            user_id=current_user.id,
-            action="UPDATE_STARTING_BALANCE",
-            module="Financial",
-            entity_type="OpeningBalance",
-            entity_id=existing.id,
-            old_values={"opening_balance": old_val, "financial_year": existing.financial_year},
-            new_values={"opening_balance": ob_in.opening_balance, "financial_year": ob_in.financial_year},
-            request=request
-        )
+        try:
+            AuditService.log_action(
+                db=db,
+                user_id=current_user.uuid,
+                action="UPDATE_STARTING_BALANCE",
+                module="Financial",
+                entity_type="OpeningBalance",
+                entity_id=existing.id,
+                old_values={"opening_balance": old_val, "financial_year": existing.financial_year},
+                new_values={"opening_balance": ob_in.opening_balance, "financial_year": ob_in.financial_year},
+                request=request
+            )
+        except Exception as err:
+            print(f"Audit log warning: {err}")
         db.commit()
         db.refresh(existing)
         return existing
@@ -74,17 +77,21 @@ def set_opening_balance(
             created_at=datetime.utcnow()
         )
         db.add(new_ob)
-        AuditService.log_action(
-            db=db,
-            user_id=current_user.id,
-            action="SET_STARTING_BALANCE",
-            module="Financial",
-            entity_type="OpeningBalance",
-            entity_id=new_ob.id,
-            old_values=None,
-            new_values={"opening_balance": ob_in.opening_balance, "financial_year": ob_in.financial_year},
-            request=request
-        )
+        db.flush()
+        try:
+            AuditService.log_action(
+                db=db,
+                user_id=current_user.uuid,
+                action="SET_STARTING_BALANCE",
+                module="Financial",
+                entity_type="OpeningBalance",
+                entity_id=new_ob.id,
+                old_values=None,
+                new_values={"opening_balance": ob_in.opening_balance, "financial_year": ob_in.financial_year},
+                request=request
+            )
+        except Exception as err:
+            print(f"Audit log warning: {err}")
         db.commit()
         db.refresh(new_ob)
         return new_ob
@@ -117,17 +124,20 @@ def update_opening_balance(
     existing.created_by = current_user.id
     existing.created_at = datetime.utcnow()
     
-    AuditService.log_action(
-        db=db,
-        user_id=current_user.id,
-        action="UPDATE_STARTING_BALANCE",
-        module="Financial",
-        entity_type="OpeningBalance",
-        entity_id=existing.id,
-        old_values={"opening_balance": old_val},
-        new_values={"opening_balance": existing.opening_balance},
-        request=request
-    )
+    try:
+        AuditService.log_action(
+            db=db,
+            user_id=current_user.uuid,
+            action="UPDATE_STARTING_BALANCE",
+            module="Financial",
+            entity_type="OpeningBalance",
+            entity_id=existing.id,
+            old_values={"opening_balance": old_val},
+            new_values={"opening_balance": existing.opening_balance},
+            request=request
+        )
+    except Exception as err:
+        print(f"Audit log warning: {err}")
     db.commit()
     db.refresh(existing)
     return existing
