@@ -14,7 +14,9 @@ import {
   AlertTriangle, 
   CheckCircle, 
   Download,
-  Eye 
+  Eye,
+  Edit2,
+  X
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -28,6 +30,20 @@ const Projects = () => {
     project_code: '',
     description: '',
     allocated_budget: ''
+  });
+
+  // Edit Project Modal State
+  const [editModalProject, setEditModalProject] = useState(null);
+  const [editing, setEditing] = useState(false);
+  const [editFormData, setEditFormData] = useState({
+    name: '',
+    project_code: '',
+    description: '',
+    allocated_budget: '',
+    status: 'Active',
+    venue: '',
+    start_date: '',
+    end_date: ''
   });
 
   // Delete Project Modal State
@@ -139,6 +155,46 @@ const Projects = () => {
       showToast(err.response?.data?.detail || "Failed to delete project", 'error');
     } finally {
       setDeleting(false);
+    }
+  };
+
+  const openEditProject = (project) => {
+    setEditModalProject(project);
+    setEditFormData({
+      name: project.name || '',
+      project_code: project.project_code || '',
+      description: project.description || '',
+      allocated_budget: project.allocated_budget || 0,
+      status: project.status || 'Active',
+      venue: project.venue || '',
+      start_date: project.start_date || '',
+      end_date: project.end_date || ''
+    });
+  };
+
+  const handleUpdateProject = async (e) => {
+    e.preventDefault();
+    if (!editModalProject) return;
+    setEditing(true);
+    try {
+      const updateData = {
+        name: editFormData.name.trim(),
+        description: editFormData.description ? editFormData.description.trim() : null,
+        allocated_budget: parseFloat(editFormData.allocated_budget) || 0,
+        status: editFormData.status,
+        venue: editFormData.venue ? editFormData.venue.trim() : null,
+        start_date: editFormData.start_date || null,
+        end_date: editFormData.end_date || null
+      };
+      await projectService.updateProject(editModalProject.id, updateData);
+      showToast(`Project "${editFormData.name}" updated successfully`, 'success');
+      setEditModalProject(null);
+      fetchProjects();
+    } catch (err) {
+      console.error("Update project error", err);
+      showToast(err.response?.data?.detail || "Failed to update project", 'error');
+    } finally {
+      setEditing(false);
     }
   };
 
@@ -303,6 +359,22 @@ const Projects = () => {
                     }}>
                       {project.status}
                     </span>
+                    <button
+                      type="button"
+                      onClick={() => openEditProject(project)}
+                      className="btn btn-secondary"
+                      style={{
+                        padding: '0.35rem',
+                        color: 'var(--primary)',
+                        backgroundColor: 'rgba(59, 130, 246, 0.08)',
+                        border: '1px solid rgba(59, 130, 246, 0.25)',
+                        borderRadius: '0.375rem',
+                        cursor: 'pointer'
+                      }}
+                      title={`Edit ${project.name}`}
+                    >
+                      <Edit2 size={15} />
+                    </button>
                     <button
                       type="button"
                       onClick={() => setDeleteModalProject(project)}
@@ -536,6 +608,121 @@ const Projects = () => {
           </div>
         </div>
       )}
+
+      {/* Edit Project Modal */}
+      {editModalProject && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
+          <div className="card" style={{ width: '100%', maxWidth: '540px', maxHeight: '90vh', overflowY: 'auto' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <h3 style={{ margin: 0, fontSize: '1.25rem' }}>Edit Project</h3>
+              <button 
+                type="button" 
+                onClick={() => setEditModalProject(null)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <form onSubmit={handleUpdateProject}>
+              <div className="form-group">
+                <label className="form-label">Project Name</label>
+                <input 
+                  type="text" 
+                  className="input-field" 
+                  value={editFormData.name}
+                  onChange={e => setEditFormData({...editFormData, name: e.target.value})}
+                  required
+                />
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="form-group">
+                  <label className="form-label">Project Code</label>
+                  <input 
+                    type="text" 
+                    className="input-field" 
+                    value={editFormData.project_code}
+                    disabled
+                    style={{ backgroundColor: 'var(--bg-main)', cursor: 'not-allowed', opacity: 0.7 }}
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Status</label>
+                  <select
+                    className="input-field"
+                    value={editFormData.status}
+                    onChange={e => setEditFormData({...editFormData, status: e.target.value})}
+                  >
+                    <option value="Planning">Planning</option>
+                    <option value="Registration Open">Registration Open</option>
+                    <option value="Active">Active</option>
+                    <option value="Ongoing">Ongoing</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Archived">Archived</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
+                </div>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Allocated Budget (₹)</label>
+                <input 
+                  type="number" 
+                  className="input-field" 
+                  value={editFormData.allocated_budget}
+                  onChange={e => setEditFormData({...editFormData, allocated_budget: e.target.value})}
+                  min="0"
+                  step="0.01"
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Venue / Location</label>
+                <input 
+                  type="text" 
+                  className="input-field" 
+                  placeholder="e.g. Auditorium / Main Seminar Hall"
+                  value={editFormData.venue}
+                  onChange={e => setEditFormData({...editFormData, venue: e.target.value})}
+                />
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="form-group">
+                  <label className="form-label">Start Date</label>
+                  <input 
+                    type="date" 
+                    className="input-field" 
+                    value={editFormData.start_date}
+                    onChange={e => setEditFormData({...editFormData, start_date: e.target.value})}
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">End Date</label>
+                  <input 
+                    type="date" 
+                    className="input-field" 
+                    value={editFormData.end_date}
+                    onChange={e => setEditFormData({...editFormData, end_date: e.target.value})}
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Description</label>
+                <textarea 
+                  className="input-field" 
+                  value={editFormData.description}
+                  onChange={e => setEditFormData({...editFormData, description: e.target.value})}
+                  rows="3"
+                ></textarea>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '2rem' }}>
+                <button type="button" className="btn btn-secondary" onClick={() => setEditModalProject(null)}>Cancel</button>
+                <button type="submit" className="btn btn-primary" disabled={editing}>
+                  {editing ? 'Saving Changes...' : 'Save Changes'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       {showModal && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
           <div className="card" style={{ width: '100%', maxWidth: '500px', maxHeight: '90vh', overflowY: 'auto' }}>

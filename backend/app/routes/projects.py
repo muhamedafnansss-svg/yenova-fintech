@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
+from datetime import datetime, date
 from app.database.config import get_db
 from app.models.project import Project
 from app.schemas.project import ProjectCreate, ProjectUpdate, ProjectResponse, ProjectFinancialSummary
@@ -60,10 +61,25 @@ def update_project(
     if not db_project:
         raise HTTPException(status_code=404, detail="Project not found")
         
+    old_val = {"name": db_project.name, "allocated_budget": db_project.allocated_budget, "status": db_project.status}
     update_data = project_in.dict(exclude_unset=True)
     for key, value in update_data.items():
         setattr(db_project, key, value)
         
+    try:
+        AuditService.log_action(
+            db=db,
+            user_id=current_user.uuid,
+            action="UPDATE_PROJECT",
+            module="Projects",
+            entity_type="Project",
+            entity_id=id,
+            old_values=old_val,
+            new_values={k: str(v) if isinstance(v, (datetime, date)) else v for k, v in update_data.items()}
+        )
+    except Exception as e:
+        print(f"Audit log warning: {e}")
+
     db.commit()
     db.refresh(db_project)
     return db_project
