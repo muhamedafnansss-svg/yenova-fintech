@@ -32,7 +32,7 @@ class LedgerUpdate(BaseModel):
 class LedgerResponse(LedgerBase):
     id: str
     transaction_number: str
-    entered_by: str
+    entered_by: Any
     created_at: datetime
     updated_at: datetime
     category: Optional[CategoryResponse] = None

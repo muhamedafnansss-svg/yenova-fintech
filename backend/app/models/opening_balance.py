@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from sqlalchemy import Column, String, Float, ForeignKey, DateTime
+from sqlalchemy import Column, String, Integer, Float, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from app.database.config import Base
 
@@ -11,7 +11,7 @@ class OpeningBalance(Base):
     financial_year = Column(String, unique=True, index=True, nullable=False) # e.g., "2026-2027"
     opening_balance = Column(Float, nullable=False)
     
-    created_by = Column(String, ForeignKey("users.id"), nullable=False)
+    created_by = Column(Integer, ForeignKey("users.id"), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     # Relationships

@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from sqlalchemy import Column, String, Float, ForeignKey, DateTime, Date, Text, Enum
+from sqlalchemy import Column, String, Integer, Float, ForeignKey, DateTime, Date, Text, Enum
 from sqlalchemy.orm import relationship
 import enum
 from app.database.config import Base
@@ -25,8 +25,8 @@ class Project(Base):
     start_date = Column(Date, nullable=True)
     end_date = Column(Date, nullable=True)
     
-    coordinator_id = Column(String, ForeignKey("users.id"), nullable=True)
-    treasurer_id = Column(String, ForeignKey("users.id"), nullable=True)
+    coordinator_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    treasurer_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     
     registration_fee = Column(Float, default=0.0)
     allocated_budget = Column(Float, default=0.0)

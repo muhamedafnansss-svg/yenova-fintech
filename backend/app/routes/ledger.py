@@ -1317,7 +1317,7 @@ def commit_excel_payments(
             payment_method=p_method,
             reference_number=raw_ref if raw_ref else None,
             custom_metadata=json.dumps(custom_fields, ensure_ascii=False) if custom_fields else None,
-            entered_by=str(current_user.id),
+            entered_by=current_user.id,
             transaction_date=tx_date
         )
 

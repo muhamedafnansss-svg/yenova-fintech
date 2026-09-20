@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime, date
-from sqlalchemy import Column, String, Float, ForeignKey, DateTime, Date, Text, Enum
+from sqlalchemy import Column, String, Integer, Float, ForeignKey, DateTime, Date, Text, Enum
 from sqlalchemy.orm import relationship
 import enum
 from app.database.config import Base
@@ -36,7 +36,7 @@ class Ledger(Base):
     reference_number = Column(String, nullable=True)
     custom_metadata = Column(Text, nullable=True)
     
-    entered_by = Column(String, ForeignKey("users.id"), nullable=False)
+    entered_by = Column(Integer, ForeignKey("users.id"), nullable=False)
     transaction_date = Column(Date, default=date.today, nullable=False)
     
     created_at = Column(DateTime, default=datetime.utcnow)

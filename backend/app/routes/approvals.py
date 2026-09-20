@@ -118,7 +118,7 @@ def approve_request(
         category_id=req.category_id,
         project_id=req.event_id,
         description=f"[Approved Request: {req.request_number}] {req.description}",
-        entered_by=str(current_user.id),
+        entered_by=current_user.id,
         status=TransactionStatus.APPROVED
     )
     db.add(ledger_entry)
