@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import date, datetime
-from typing import Optional
+from typing import Optional, Any
 
 class ProjectBase(BaseModel):
     name: str
@@ -9,8 +9,8 @@ class ProjectBase(BaseModel):
     venue: Optional[str] = None
     start_date: Optional[date] = None
     end_date: Optional[date] = None
-    coordinator_id: Optional[str] = None
-    treasurer_id: Optional[str] = None
+    coordinator_id: Optional[Any] = None
+    treasurer_id: Optional[Any] = None
     registration_fee: Optional[float] = 0.0
     allocated_budget: Optional[float] = 0.0
     status: Optional[str] = "Planning"
@@ -25,8 +25,8 @@ class ProjectUpdate(BaseModel):
     venue: Optional[str] = None
     start_date: Optional[date] = None
     end_date: Optional[date] = None
-    coordinator_id: Optional[str] = None
-    treasurer_id: Optional[str] = None
+    coordinator_id: Optional[Any] = None
+    treasurer_id: Optional[Any] = None
     registration_fee: Optional[float] = None
     allocated_budget: Optional[float] = None
     status: Optional[str] = None

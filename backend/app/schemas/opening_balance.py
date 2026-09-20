@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Any
 
 class OpeningBalanceBase(BaseModel):
     financial_year: str
@@ -14,7 +14,7 @@ class OpeningBalanceUpdate(BaseModel):
 
 class OpeningBalanceResponse(OpeningBalanceBase):
     id: str
-    created_by: str
+    created_by: Any
     created_at: datetime
 
     class Config:

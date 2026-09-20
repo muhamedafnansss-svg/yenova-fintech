@@ -84,7 +84,8 @@ const Dashboard = () => {
       setSummary(sumData);
     } catch (err) {
       console.error(err);
-      showToast("Failed to update starting balance", 'error');
+      const msg = typeof err.response?.data?.detail === 'string' ? err.response.data.detail : "Failed to update starting balance";
+      showToast(msg, 'error');
     } finally {
       setUpdatingBalance(false);
     }
