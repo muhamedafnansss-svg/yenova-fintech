@@ -3,8 +3,10 @@ import io
 import csv
 import re
 import json
+import uuid
 from datetime import datetime, date
 from fastapi import APIRouter, Depends, Query, HTTPException, UploadFile, File
+from pydantic import BaseModel
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import or_, func
 from typing import List, Optional
@@ -19,6 +21,7 @@ from app.schemas.ledger import LedgerResponse
 from app.models.user import User
 from app.models.role import Role
 from app.middleware.deps import get_current_user, require_permission
+from app.services.audit import AuditService
 
 router = APIRouter(prefix="/api/ledger", tags=["ledger"])
 
@@ -1319,33 +1322,42 @@ def commit_excel_payments(
         )
 
         db.add(new_entry)
-        if raw_ref and not ref_is_generic:
-            existing_refs.add(raw_ref.lower())
+        if raw_ref and not is_placeholder_reference(raw_ref):
+            detector["existing_refs"][raw_ref.lower()] = (tx_number, raw_ref)
 
         imported_count += 1
         total_imported_amount += amt
 
     if imported_count > 0:
+        try:
+            user_uuid = getattr(current_user, "uuid", None) or str(current_user.id)
+            AuditService.log_action(
+                db=db,
+                user_id=user_uuid,
+                action=f"BULK_IMPORT_{tx_type.value.upper()}",
+                module="Ledger",
+                entity_type="Batch",
+                entity_id=f"BATCH-{int(datetime.now().timestamp())}",
+                old_values=None,
+                new_values={
+                    "type": tx_type.value,
+                    "imported_count": imported_count,
+                    "total_amount": total_imported_amount,
+                    "skipped_count": skipped_count
+                }
+            )
+        except Exception as audit_err:
+            print(f"Warning: Audit log failed during bulk import: {audit_err}")
         db.commit()
-        AuditService.log_action(
-            db=db,
-            user_id=current_user.uuid,
-            action=f"BULK_IMPORT_{tx_type.value.upper()}",
-            module="Ledger",
-            entity_type="Batch",
-            entity_id=f"BATCH-{int(datetime.now().timestamp())}",
-            old_values=None,
-            new_values={
-                "type": tx_type.value,
-                "imported_count": imported_count,
-                "total_amount": total_imported_amount,
-                "skipped_count": skipped_count
-            }
-        )
     elif skipped_count > 0:
         raise HTTPException(
             status_code=400,
             detail=f"No transactions were imported. Checked {len(payload.rows)} row(s): all were skipped because amount was ₹0 or duplicate reference numbers were detected."
+        )
+    else:
+        raise HTTPException(
+            status_code=400,
+            detail="No valid transactions were provided to import."
         )
 
     return {

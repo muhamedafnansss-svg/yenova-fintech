@@ -391,7 +391,11 @@ const ImportScannerModal = ({ isOpen, onClose, onSuccess }) => {
       onClose();
     } catch (err) {
       console.error("Import commit error", err);
-      alert(err.response?.data?.detail || "Failed to commit imported transactions.");
+      let errMsg = err.response?.data?.detail;
+      if (typeof errMsg === "object") {
+        errMsg = JSON.stringify(errMsg);
+      }
+      alert(errMsg || err.message || "Failed to commit imported transactions.");
     } finally {
       setCommitting(false);
     }
